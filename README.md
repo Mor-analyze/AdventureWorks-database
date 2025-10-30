@@ -19,20 +19,38 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
 ## Project Structure
 
-### 1.SQL
+### 1.Key Business Questions
+1. **Sales Performance**
+-What are the top 10 products by total sales and quantity sold?
+-Which sales territories generate the most revenue?
+-How have monthly sales trends evolved over time?
+-What is the average order value (AOV) per region or customer type?
+2. **Customer Insights**
+-Who are the top 10 customers by revenue?
+-How many customers are repeat vs new?
+-What are the most profitable customer segments?
+-Which region shows the highest customer growth?
+3. **Product & Inventory**
+-Which product categories perform best by sales and profit?
+-What are the slow-moving or low-margin products?
+-How do production costs compare to sales prices?
+4. **Employee & Department Analysis**
+-Which salespersons achieve the highest sales volume?
+-What’s the average commission per employee?
+-How do departments compare in employee performance metrics?
 
-- 01_data_exploration
-- 02_sales_analysis
-- 03_customer_segmentation
-- 04_product_performance
-- 05_employee_performance
+### 2. Reports & Dashboards (Power BI)
+1. **Sales Overview Dashboard**
+Revenue trends, product and territory performance
+2. **Customer Insights Dashboard**
+Segmentation, retention, and top customers
+3. **Employee Performance Dashboard**
+Sales by employee, commission analysis
+4. **Product Analysis Dashboard**
+Product profitability and inventory movement
 
-
-### 2. Reports
-
-### 3. business_questions.md
-### 4. findings_summary.md
-### 5. conclusions
+### 3. findings_summary
+### 4. conclusions
 
 -----------------------------------------------------
 - **Record Count**: Determine the total number of records in the dataset.

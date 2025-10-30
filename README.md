@@ -1,51 +1,40 @@
-# AdventureWorks-database
-A sample OLTP (online transaction processing) database created by Microsoft
-
-
-# Customer Analysis SQL Project
+# AdventureWorks2022 Data Analytics Project
+This project analyzes the AdventureWorks2022 sample database — a fictitious manufacturing company that sells bicycles and related products worldwide. The goal is to demonstrate end-to-end data analysis, reporting, and business insights using SQL Serve
 
 ## Project Overview
 
-**Project Title**: Customer Analysis  
+**Project Title**: AdventureWorks2022 Data Analytics
 **Level**: Advanced  
 **Database**: `AdventureWorks2022`
 
 This project is designed to demonstrate SQL skills and techniques typically used by data analysts to explore, clean, and analyze retail sales data. The project involves performing exploratory data analysis (EDA), and answering specific business questions through SQL queries. 
+
 ## Objectives
 
-1. **Set up a retail sales database**: Create and populate a retail sales database with the provided sales data.
-2. **Data Cleaning**: Identify and remove any records with missing or null values.
+1. **Understand the business**: Identify key performance areas such as sales, products, customers, and employee performance.
+2. **Apply SQL Skills**: Perform advanced queries, joins, CTEs, window functions, and aggregations.
 3. **Exploratory Data Analysis (EDA)**: Perform basic exploratory data analysis to understand the dataset.
 4. **Business Analysis**: Use SQL to answer specific business questions and derive insights from the sales data.
+5. **Visualize results**: Create interactive Power BI dashboards to communicate findings effectively.
 
 ## Project Structure
 
-### 1. Database Setup
+### 1.SQL
 
-- **Database Creation**: The project starts by creating a database named `p1_retail_db`.
-- **Table Creation**: A table named `retail_sales` is created to store the sales data. The table structure includes columns for transaction ID, sale date, sale time, customer ID, gender, age, product category, quantity sold, price per unit, cost of goods sold (COGS), and total sale amount.
+- 01_data_exploration
+- 02_sales_analysis
+- 03_customer_segmentation
+- 04_product_performance
+- 05_employee_performance
 
-```sql
-CREATE DATABASE p1_retail_db;
 
-CREATE TABLE retail_sales
-(
-    transactions_id INT PRIMARY KEY,
-    sale_date DATE,	
-    sale_time TIME,
-    customer_id INT,	
-    gender VARCHAR(10),
-    age INT,
-    category VARCHAR(35),
-    quantity INT,
-    price_per_unit FLOAT,	
-    cogs FLOAT,
-    total_sale FLOAT
-);
-```
+### 2. Reports
 
-### 2. Data Exploration & Cleaning
+### 3. business_questions.md
+### 4. findings_summary.md
+### 5. conclusions
 
+-----------------------------------------------------
 - **Record Count**: Determine the total number of records in the dataset.
 - **Customer Count**: Find out how many unique customers are in the dataset.
 - **Category Count**: Identify all unique product categories in the dataset.
@@ -70,7 +59,7 @@ WHERE
 ```
 
 ### 3. Data Analysis & Findings
-
+ 
 The following SQL queries were developed to answer specific business questions:
 
 1. **Write a SQL query to retrieve all columns for sales made on '2022-11-05**:

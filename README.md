@@ -19,25 +19,71 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
 ## Project Structure
 
-### 1.Key Business Questions
+### 1. Key Business Questions
 1. **Sales Performance**
--What are the top 10 products by total sales and quantity sold?
--Which sales territories generate the most revenue?
--How have monthly sales trends evolved over time?
--What is the average order value (AOV) per region or customer type?
-2. **Customer Insights**
--Who are the top 10 customers by revenue?
--How many customers are repeat vs new?
--What are the most profitable customer segments?
--Which region shows the highest customer growth?
-3. **Product & Inventory**
--Which product categories perform best by sales and profit?
--What are the slow-moving or low-margin products?
--How do production costs compare to sales prices?
-4. **Employee & Department Analysis**
--Which salespersons achieve the highest sales volume?
--What’s the average commission per employee?
--How do departments compare in employee performance metrics?
+    - What are the top 10 products by total sales and quantity sold?
+   ```SQL
+     select PD.Name as ProductName ,sum(SOD.OrderQty)as TotalQuantitySold
+    from Sales.SalesOrderDetail SOD 
+    join Production.Product PD 
+    on SOD.ProductID = PD.ProductID
+    group by PD.Name ,SOD.ProductID	
+    order by TotalQuantitySold desc 
+   ```
+   <img width="218" height="136" alt="Screenshot 2025-10-30 163627" src="https://github.com/user-attachments/assets/4f080f1b-6e93-4502-8f21-2c1d06a0a982" />
+   
+    - What are the top 10 products by revenue?
+   ```SQL
+   select PP.Name, sum(SS.OrderQty*SS.UnitPrice) as TotalRevenue
+    from Sales.SalesOrderDetail as SS join Production.Product as PP
+    on PP.ProductID = SS.ProductID 
+    group by PP.Name, SS.ProductID
+    order by TotalRevenue desc
+   ```
+   
+   <img width="189" height="145" alt="Screenshot 2025-10-31 062517" src="https://github.com/user-attachments/assets/1b9d5550-3549-43b3-ad31-7a808058276a" />
+
+    - Which sales territories generate the most revenue?
+   ``` SQL
+   select ST.Name, ST.CountryRegionCode,sum(SOD.OrderQty* SOD.UnitPrice) as TotalRevenue 
+    from Sales.SalesOrderHeader as SS 
+    join Sales.SalesOrderDetail as SOD on SOD.SalesOrderID = SS.SalesOrderID
+    join sales.SalesTerritory as ST on ST.TerritoryID=SS.TerritoryID
+    group by ST.Name, ST.CountryRegionCode
+    order by TotalRevenue desc
+   ```
+   <img width="250" height="149" alt="Screenshot 2025-10-31 064404" src="https://github.com/user-attachments/assets/098b8a44-7086-413d-9601-a2eb61f4c311" />
+
+
+    - How have monthly sales trends evolved over time?
+    ``` SQL
+    select 
+        year(SOH.orderDate) aS orderYear , 
+        MONTH(SOH.orderDate) as Ordermonth ,
+        sum(SOD.OrderQty*SOD.UnitPrice)as TotalRevenue 
+        from Sales.SalesOrderDetail as SOD 
+        join Sales.SalesOrderHeader as SOH
+        on SOD.SalesOrderID = SOH.SalesOrderID
+        group by year(SOH.OrderDate),MONTH(SOH.OrderDate)
+        ORDER BY OrderYear, OrderMonth;
+    ```  
+    <img width="199" height="240" alt="Screenshot 2025-10-31 160557" src="https://github.com/user-attachments/assets/3c6719d7-06b5-44e9-b786-e4ae96603020" />
+
+    - What is the average order value (AOV) per region or customer type?
+3. **Customer Insights**
+    - Who are the top 10 customers by revenue?
+    - How many customers are repeat vs new?
+    - What are the most profitable customer segments?
+    - Which region shows the highest customer growth?
+4. **Product & Inventory**
+    - What are the top 10 products?
+    - Which product categories perform best by sales and profit?
+    - What are the slow-moving or low-margin products?
+    - How do production costs compare to sales prices?
+6. **Employee & Department Analysis**
+    - Which salespersons achieve the highest sales volume?
+    - What’s the average commission per employee?
+    - How do departments compare in employee performance metrics?
 
 ### 2. Reports & Dashboards (Power BI)
 1. **Sales Overview Dashboard**

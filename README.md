@@ -23,10 +23,12 @@ This project is designed to demonstrate SQL skills and techniques typically used
 1. **Sales Performance**
     - What are the top 10 products by total sales and quantity sold?
    ```SQL
-     select PD.Name as ProductName ,sum(SOD.OrderQty)as TotalQuantitySold
+   select
+       PD.Name as ProductName ,
+       sum(SOD.OrderQty)as TotalQuantitySold
     from Sales.SalesOrderDetail SOD 
     join Production.Product PD 
-    on SOD.ProductID = PD.ProductID
+        on SOD.ProductID = PD.ProductID
     group by PD.Name ,SOD.ProductID	
     order by TotalQuantitySold desc 
    ```
@@ -34,9 +36,12 @@ This project is designed to demonstrate SQL skills and techniques typically used
    
     - What are the top 10 products by revenue?
    ```SQL
-   select PP.Name, sum(SS.OrderQty*SS.UnitPrice) as TotalRevenue
-    from Sales.SalesOrderDetail as SS join Production.Product as PP
-    on PP.ProductID = SS.ProductID 
+   select
+       PP.Name,
+       sum(SS.OrderQty*SS.UnitPrice) as TotalRevenue
+    from Sales.SalesOrderDetail as SS
+    join Production.Product as PP
+        on PP.ProductID = SS.ProductID 
     group by PP.Name, SS.ProductID
     order by TotalRevenue desc
    ```
@@ -45,10 +50,14 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
     - Which sales territories generate the most revenue?
    ``` SQL
-   select ST.Name, ST.CountryRegionCode,sum(SOD.OrderQty* SOD.UnitPrice) as TotalRevenue 
+   select
+       ST.Name, ST.CountryRegionCode,
+       sum(SOD.OrderQty* SOD.UnitPrice) as TotalRevenue 
     from Sales.SalesOrderHeader as SS 
-    join Sales.SalesOrderDetail as SOD on SOD.SalesOrderID = SS.SalesOrderID
-    join sales.SalesTerritory as ST on ST.TerritoryID=SS.TerritoryID
+    join Sales.SalesOrderDetail as SOD
+       on SOD.SalesOrderID = SS.SalesOrderID
+    join sales.SalesTerritory as ST
+       on ST.TerritoryID=SS.TerritoryID
     group by ST.Name, ST.CountryRegionCode
     order by TotalRevenue desc
    ```
@@ -69,13 +78,45 @@ This project is designed to demonstrate SQL skills and techniques typically used
     ```  
     <img width="199" height="240" alt="Screenshot 2025-10-31 160557" src="https://github.com/user-attachments/assets/3c6719d7-06b5-44e9-b786-e4ae96603020" />
 
-    - What is the average order value (AOV) per region or customer type?
-3. **Customer Insights**
+    - What is the average order value (AOV) per region?
+  ``` SQL
+    select 
+    	ST.Name as Region,
+    	count(SOH.salesorderID) as TotalOrders,
+    	sum(SOH.SubTotal) as TotalRevenue,
+    	AVG(SOh.SubTotal) as AvrageOrderValue
+    from Sales.salesOrderHeader as SOH 
+    join.Sales.SalesTerritory AS ST 
+    	on ST.TerritoryID = SOH.TerritoryID
+    group by ST.Name
+    order by AvrageOrderValue desc
+```
+<img width="290" height="151" alt="Screenshot 2025-11-01 091213" src="https://github.com/user-attachments/assets/4dbb25f9-c916-4690-87da-e410f855783b" />
+
+
+
+2. **Customer Insights**
     - Who are the top 10 customers by revenue?
+    ```SQL
+    select top 10
+    SS.BusinessEntityID AS StoreID , SS.Name as StoreName, sum(orderQty*UnitPrice) as Revenue
+    from Sales.SalesOrderDetail as SOD
+    join Sales.SalesOrderHeader as SOH 
+    	on SOD.SalesOrderID=SOH.SalesOrderID 
+    join Sales.Customer as SC
+        on SC.CustomerID = SOH.CustomerID
+    join Sales.Store as SS
+        on SC.StoreID=SS.BusinessEntityID
+    group by SS.BusinessEntityID , SS.Name
+    order by Revenue desc
+    ```
+   <img width="267" height="158" alt="Screenshot 2025-11-02 121929" src="https://github.com/user-attachments/assets/b3fa91f1-cf9d-47f0-ac7b-f63341d0ed8c" />
+
+
     - How many customers are repeat vs new?
     - What are the most profitable customer segments?
     - Which region shows the highest customer growth?
-4. **Product & Inventory**
+3. **Product & Inventory**
     - What are the top 10 products?
     - Which product categories perform best by sales and profit?
     - What are the slow-moving or low-margin products?

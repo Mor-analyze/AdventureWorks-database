@@ -114,11 +114,66 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
 
     - How many customers are repeat vs new?
+   ``` sql
+    with customerOrders as 
+    (select CustomerID , count(SalesOrderID) as ordercount from Sales.SalesOrderHeader
+    group by CustomerID)
+    select 
+    	case 
+    		when ordercount = 1 then 'New Customer'
+    		else 'repeat Customer'
+    	end as CustomerType,
+    count(*) as CustomerCount from customerOrders
+    group by
+    	case 
+    		when ordercount = 1 then 'New Customer'
+    		else 'repeat Customer'
+    	end
+      ```
+   <img width="242" height="73" alt="Screenshot 2025-11-04 064036" src="https://github.com/user-attachments/assets/003dda5e-9f71-4034-a2a0-c3bb92c42127" />
+
+      
     - What are the most profitable customer segments?
+   ``` sql
+    select st.name As Territory, 
+    st.countryregioncode as TerritoryCode,
+        sum(sod.LineTotal - (pp.standardcost* SOD.OrderQty)) as TotalProfit,
+        count(DIStinct SOH.customerID)as TotalCustomers,
+        avg(sod.LineTotal - (pp.standardcost* SOD.OrderQty)) as AvrageProfitPerOrder
+    from Sales.SalesOrderDetail as SOD 
+    join sales.SalesOrderHeader as SOH
+       on SOH.SalesOrderID = SOD.SalesOrderID
+    join Production.Product as pp
+       on SOD.ProductID = pp.ProductID
+    join Sales.Customer as CS
+       on Cs.CustomerID =SOh.CustomerID
+    join Sales.SalesTerritory as ST
+       on SOh.TerritoryID = St.TerritoryID
+    group by st.Name , st.countryregioncode
+    order by TotalProfit desc
+    ```
+   <img width="383" height="170" alt="Screenshot 2025-11-06 061147" src="https://github.com/user-attachments/assets/9a392f4f-8378-4012-b982-a6e19893ce3e" />
+
+    
     - Which region shows the highest customer growth?
 3. **Product & Inventory**
-    - What are the top 10 products?
-    - Which product categories perform best by sales and profit?
+    - Which product categories perform best by sales?
+   ``` sql
+    select top 10 PPs.Name as SubCategoryName, sum(sod.LineTotal) as TotalSold 
+    from Sales.SalesOrderDetail  as SOD
+    join Production.Product as pp 
+    	on pp.ProductID=sod.ProductID 
+    join Production.ProductSubcategory as PPS 
+    	on PPS.ProductSubcategoryID = pp.ProductSubcategoryID
+    group by PPs.Name
+    order by TotalSold desc
+      ```
+   <img width="197" height="176" alt="Screenshot 2025-11-06 165104" src="https://github.com/user-attachments/assets/15d0e48a-f64d-4a38-9cf3-865eecf8af9b" />
+
+
+    - Which product categories perform best by profit?
+
+
     - What are the slow-moving or low-margin products?
     - How do production costs compare to sales prices?
 6. **Employee & Department Analysis**
@@ -167,63 +222,6 @@ WHERE
  
 The following SQL queries were developed to answer specific business questions:
 
-1. **Write a SQL query to retrieve all columns for sales made on '2022-11-05**:
-```sql
-SELECT *
-FROM retail_sales
-WHERE sale_date = '2022-11-05';
-```
-
-2. **Write a SQL query to retrieve all transactions where the category is 'Clothing' and the quantity sold is more than 4 in the month of Nov-2022**:
-```sql
-SELECT 
-  *
-FROM retail_sales
-WHERE 
-    category = 'Clothing'
-    AND 
-    TO_CHAR(sale_date, 'YYYY-MM') = '2022-11'
-    AND
-    quantity >= 4
-```
-
-3. **Write a SQL query to calculate the total sales (total_sale) for each category.**:
-```sql
-SELECT 
-    category,
-    SUM(total_sale) as net_sale,
-    COUNT(*) as total_orders
-FROM retail_sales
-GROUP BY 1
-```
-
-4. **Write a SQL query to find the average age of customers who purchased items from the 'Beauty' category.**:
-```sql
-SELECT
-    ROUND(AVG(age), 2) as avg_age
-FROM retail_sales
-WHERE category = 'Beauty'
-```
-
-5. **Write a SQL query to find all transactions where the total_sale is greater than 1000.**:
-```sql
-SELECT * FROM retail_sales
-WHERE total_sale > 1000
-```
-
-6. **Write a SQL query to find the total number of transactions (transaction_id) made by each gender in each category.**:
-```sql
-SELECT 
-    category,
-    gender,
-    COUNT(*) as total_trans
-FROM retail_sales
-GROUP 
-    BY 
-    category,
-    gender
-ORDER BY 1
-```
 
 7. **Write a SQL query to calculate the average sale for each month. Find out best selling month in each year**:
 ```sql

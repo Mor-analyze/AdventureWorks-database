@@ -133,7 +133,7 @@ This project is designed to demonstrate SQL skills and techniques typically used
    <img width="242" height="73" alt="Screenshot 2025-11-04 064036" src="https://github.com/user-attachments/assets/003dda5e-9f71-4034-a2a0-c3bb92c42127" />
 
       
-    - What are the most profitable customer segments?
+    - What are the most profitable Territories?
    ``` sql
     select st.name As Territory, 
     st.countryregioncode as TerritoryCode,
@@ -155,7 +155,8 @@ This project is designed to demonstrate SQL skills and techniques typically used
    <img width="383" height="170" alt="Screenshot 2025-11-06 061147" src="https://github.com/user-attachments/assets/9a392f4f-8378-4012-b982-a6e19893ce3e" />
 
     
-    - Which region shows the highest customer growth?
+    - Which region shows the highest customer growth??
+      
 3. **Product & Inventory**
     - Which product categories perform best by sales?
    ``` sql
@@ -172,10 +173,68 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
 
     - Which product categories perform best by profit?
+    ``` sql
+    select top 10 PPs.Name as SubCategoryName, 
+    sum(sod.LineTotal - (pp.standardcost* SOD.OrderQty)) as TotalProfit,
+    avg(sod.LineTotal - (pp.standardcost* SOD.OrderQty)) as AvrageProfitPerOrder
+    from Sales.SalesOrderDetail  as SOD
+    join Sales.SalesOrderHeader as SOH
+    	on soh.SalesOrderID = Sod.SalesOrderID
+    join Production.Product as pp 
+    	on pp.ProductID=sod.ProductID 
+    join Production.ProductSubcategory as PPS 
+    	on PPS.ProductSubcategoryID = pp.ProductSubcategoryID
+    group by PPs.Name
+    order by TotalProfit desc
+    ```
+    <img width="259" height="152" alt="Screenshot 2025-11-07 053844" src="https://github.com/user-attachments/assets/092e5be6-9dbf-41c8-9032-6b8b63e506c7" />
 
 
-    - What are the slow-moving or low-margin products?
+    - What are the slow-moving product?
+    ```sql
+    select SOD.ProductID, pp.name, 
+    sum(SOD.orderqty) as totalorders 
+    from Sales.SalesOrderDetail as SOD
+    join Production.Product as pp 
+    	on pp.ProductID = SOD.ProductID
+    group by pp.name, SOD.ProductID
+    having sum(SOD.orderqty) <20
+    order by totalorders
+    ```
+    <img width="251" height="105" alt="Screenshot 2025-11-07 062846" src="https://github.com/user-attachments/assets/b378ce61-4dcb-4276-b90d-20311384127f" />
+
+    - What are the low-margin products?
+   ```sql
+   select pp.name as 'Product Name',
+    sum(sod.OrderQty) as 'Total Sold',
+    sum(sod.linetotal) as Revenue,
+    sum(sod.LineTotal - (pp.StandardCost*sod.OrderQty)) as 'Profit/Loss' ,
+    (sum(sod.LineTotal - (pp.StandardCost*sod.OrderQty))/sum(sod.linetotal))*100 as Margin
+    from Sales.SalesOrderDetail as SOD 
+    join Production.Product as pp 
+    	on SOD.ProductID = pp.ProductID		
+    group by pp.name
+    order by margin 
+   ```
+    <img width="389" height="240" alt="Screenshot 2025-11-09 081256" src="https://github.com/user-attachments/assets/7dd13b3c-ffe4-48f7-980d-34369ee743c8" />
+
+
     - How do production costs compare to sales prices?
+      ```sql
+      select pp.name,
+        avg(sod.UnitPrice) as 'Avg Product Price',
+        avg(PP.StandardCost) as 'Avg Product Cost',
+        avg(sod.UnitPrice-PP.StandardCost) as 'Avg Profit PerUnit',
+        (avg(sod.UnitPrice-PP.StandardCost)/avg(PP.StandardCost)*100) as 'Markup %',
+        (avg(sod.UnitPrice-PP.StandardCost)/avg(sod.UnitPrice)*100) as 'Margin %'
+        from Sales.SalesOrderDetail as sod
+        join Production.Product as pp
+            on sod.ProductID = pp.ProductID
+        group by pp.name
+        order by 'Avg Profit PerUnit'
+        ```
+    <img width="461" height="257" alt="Screenshot 2025-11-10 084925" src="https://github.com/user-attachments/assets/821f889a-7fbc-460d-ae4a-2127f4f91a0f" />
+
 6. **Employee & Department Analysis**
     - Which salespersons achieve the highest sales volume?
     - What’s the average commission per employee?

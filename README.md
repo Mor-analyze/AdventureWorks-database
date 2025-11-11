@@ -237,7 +237,21 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
 6. **Employee & Department Analysis**
     - Which salespersons achieve the highest sales volume?
+    ```sql
+    select 
+    PP.BusinessEntityID as SalesPersonID,
+    concat(pp.FirstName, pp.LastName)as SalesPerson ,
+    count(soh.SalesOrderID) as TotalOrders,
+    sum(soh.SubTotal) as TotalSales
+    from Person.Person as pp join Sales.SalesOrderHeader as SOH
+    on PP.BusinessEntityID = SOH.SalesPersonID
+    GROUP BY pp.FirstName, pp.LastName , PP.BusinessEntityID
+    order by TotalSales desc
+    ```
+    <img width="307" height="230" alt="Screenshot 2025-11-11 071111" src="https://github.com/user-attachments/assets/a125738d-cb4e-4469-af28-8cce52242aeb" />
+
     - What’s the average commission per employee?
+    - 
     - How do departments compare in employee performance metrics?
 
 ### 2. Reports & Dashboards (Power BI)

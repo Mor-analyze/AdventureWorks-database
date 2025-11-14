@@ -251,8 +251,34 @@ This project is designed to demonstrate SQL skills and techniques typically used
     <img width="307" height="230" alt="Screenshot 2025-11-11 071111" src="https://github.com/user-attachments/assets/a125738d-cb4e-4469-af28-8cce52242aeb" />
 
     - What’s the average commission per employee?
-    - 
-    - How do departments compare in employee performance metrics?
+    ```sql
+    select
+    sp.BusinessEntityID,
+    concat(pp.FirstName, pp.LastName)as SalesPerson ,  
+    avg(sp.CommissionPct*sp.SalesYTD) as AVGcommission
+    from sales.SalesPerson as sp
+    join Person.Person as pp
+        on pp.BusinessEntityID= sp.BusinessEntityID
+    where CommissionPct > 0
+    group by sp.BusinessEntityID , pp.FirstName, pp.LastName
+    ```
+   <img width="288" height="221" alt="Screenshot 2025-11-12 061313" src="https://github.com/user-attachments/assets/7d4fdbd6-c713-40f4-a055-cecfc9d2f4b1" />
+
+    - Which departments have the highest average tenure or employee retention?
+    ```sql
+    select hd.Name,
+    avg(Datediff (day,he.HireDate , isnull(edh.EndDate,getdate()))) /365 as AvgTenureYears, 
+    count(distinct HE.BusinessEntityID) as Totalnumber
+    from HumanResources.EmployeeDepartmentHistory as EDH 
+    join HumanResources.Employee As HE 
+        on EDH.BusinessEntityID = HE.BusinessEntityID
+    join HumanResources.Department as HD 
+        on HD.DepartmentID = EDH.DepartmentID
+    group by HD.name
+    order by AvgTenureYears desc
+    ```
+    <img width="259" height="233" alt="Screenshot 2025-11-13 160853" src="https://github.com/user-attachments/assets/5537e1ba-53fe-4494-9391-e33635526498" />
+
 
 ### 2. Reports & Dashboards (Power BI)
 1. **Sales Overview Dashboard**
